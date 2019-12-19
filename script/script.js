@@ -19,9 +19,19 @@ document.addEventListener('DOMContentLoaded', () => {
         
     }
 
-    const calcDeadLine = (deadline) => {
-        const day = '10 дней';
-        return day;
+    const declOfNun = (number, titles) => number + ' ' + titles[(number % 100 > 4 && number % 100 < 20) ? 2 : [2, 0, 1, 1, 1, 2][(number % 10 < 5) ? number % 10 : 5]];
+
+    const calcDeadLine = (date) => {
+        const deadline = new Date(date);
+        const toDay = Date.now();
+                
+        const remaining = Math.floor((deadline - toDay) / 1000 / 60/ 60);
+
+        if (remaining / 24 > 2) {
+            return declOfNun(Math.floor(remaining / 24), ['день', 'дня', 'дней']);
+        }
+
+        return declOfNun(remaining, ['час', 'часа', 'часов']);        
     }
     
     const renderOrders = () => {
@@ -111,14 +121,16 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     customer.addEventListener('click', () => {
-        blockCustomer.style.display = 'block';
         blockChoice.style.display = 'none';
+        const toDay = new Date().toISOString().substring(0, 10);
+        document.getElementById('deadline').min = toDay;
+        blockCustomer.style.display = 'block';      
         btnExit.style.display = 'block';
     });
     
     freelancer.addEventListener('click', () => {
         blockChoice.style.display = 'none';
-        renderOrders();
+        renderOrders();        
         blockFreelancer.style.display = 'block';
         btnExit.style.display = 'block';
     });
